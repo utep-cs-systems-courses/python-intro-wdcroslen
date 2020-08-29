@@ -6,8 +6,7 @@ Created on Wed Aug 26 18:39:10 2020
 @author: williamcroslen
 """
 
-#! /usr/bin/env python3
-
+import re         # regular expression
 import sys        # command line arguments
 import os         # checking if file exists
 
@@ -25,28 +24,27 @@ if not os.path.exists(textFname):
     print ("text file input %s doesn't exist! Exiting" % textFname)
     exit()
 
-file = open(textFname, 'r') 
-Lines = file.readlines() 
-  
 def remove_special(string): #return list of words without special characters
     a = []
     for i in range(len(string)):
         if not string[i].isalpha():
             string = string[:i] + " " + string[i+1:]
-            a = string.split(" ")
+            a = re.split(" ",string)
     return a
             
-def add_to_dict(word):
+def add_to_dict(word): #add words to dictionary to count
     word = str(word)
     if (word in word_count):
             word_count[word] +=1
     else:
             word_count[word] = 1
-    
-    
-for line in Lines: 
+
+file = open(textFname, 'r') 
+lines = file.readlines() 
+  
+for line in lines: 
     line=line.strip() #remove '\n'
-    each = line.split(" ")
+    each = re.split(" ",line)
     for word in each:
         word = word.lower()
         if not word.isalpha(): #if word has special characters
@@ -63,8 +61,8 @@ for line in Lines:
         
 sorted_dict = sorted(word_count) #alphabatize dict
 
-with open(outputFname, 'w') as writer:
-    for i in sorted_dict:
+with open(outputFname, 'w') as writer:  #write to file from dict
+    for i in sorted_dict: 
         ans = i + " " + str(word_count[i]) + "\n"
         writer.write(ans)
 
